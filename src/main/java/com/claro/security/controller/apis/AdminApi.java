@@ -1,8 +1,6 @@
 package com.claro.security.controller.apis;
 
-import com.claro.security.requests.AuthenticationRequest;
 import com.claro.security.requests.CreateUserRequest;
-import com.claro.security.response.AuthenticationResponse;
 import com.claro.security.response.UserAndAuthenticationResponse;
 import com.claro.security.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

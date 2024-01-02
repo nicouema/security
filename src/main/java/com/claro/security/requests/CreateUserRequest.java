@@ -16,10 +16,9 @@ import lombok.Setter;
 @Builder
 public class CreateUserRequest {
 
-    @NotBlank
+    @NotBlank(message = "The username must not be blank")
     private String username;
-
-    @NotBlank
+    @NotBlank(message = "The password must not be blank")
     private String password;
 
     @Email(message="Please provide a valid email address")

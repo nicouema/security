@@ -50,7 +50,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 if (Boolean.TRUE.equals(jwtUtil.validateToken(jwt, userDetails))) {
 
                     UsernamePasswordAuthenticationToken authReq
-                            = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+                            = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                            userDetails.getAuthorities());
 
                     authReq.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

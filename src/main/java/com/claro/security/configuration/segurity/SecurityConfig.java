@@ -1,5 +1,6 @@
 package com.claro.security.configuration.segurity;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(LOGIN_URL).permitAll()
                         .requestMatchers(REGISTER_URL).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole(ADMIN_ROLE)
+                        .requestMatchers("/admin/**").hasAuthority(ADMIN_ROLE)
                         .anyRequest().fullyAuthenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
