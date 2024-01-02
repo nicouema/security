@@ -1,0 +1,76 @@
+package com.claro.security.controller;
+
+import com.claro.security.controller.apis.AuthenticationApi;
+import com.claro.security.model.User;
+import com.claro.security.requests.AuthenticationRequest;
+import com.claro.security.requests.CreateUserRequest;
+import com.claro.security.response.AuthenticationResponse;
+import com.claro.security.service.AuthenticationService;
+import com.claro.security.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+
+import static com.claro.security.controller.apis.AuthenticationApi.AUTH_URL;
+
+@RestController
+@RequestMapping(AUTH_URL)
+@RequiredArgsConstructor
+@Slf4j
+public class AuthenticationController implements AuthenticationApi {
+
+    private final UserService userService;
+    private final AuthenticationService authenticationService;
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthenticationRequest request) {
+
+        log.info(":::::: Logging in user: {} ::::::", request.getUsername());
+        AuthenticationResponse response = authenticationService
+                .prepareAuthenticationResponse(request.getUsername(),
+                        request.getPassword());
+
+        log.info(":::::: User {} logged in ::::::", request.getUsername());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping()
+    public ResponseEntity<Object> registerUser(@RequestBody CreateUserRequest userRequest) {
+        User createdUser = userService.registerUser(userRequest);
+
+
+        AuthenticationResponse authenticationResponse = authenticationService
+                .prepareAuthenticationResponse(userRequest.getUsername(),
+                        userRequest.getPassword());
+
+        var response = authenticationService
+                .prepareAuthentication(createdUser, authenticationResponse);
+
+
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("{username}").buildAndExpand(createdUser.getUsername())
+                .toUri();
+
+        return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<Object> getTest(){
+        return ResponseEntity.ok("Test");
+    }
+
+    @GetMapping("/test-2")
+    public ResponseEntity<Object> getTest2() {
+        return ResponseEntity.ok("Test 2");
+    }
+
+}
