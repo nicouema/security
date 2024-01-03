@@ -14,8 +14,4 @@ public interface AuthenticationApi {
 
     ResponseEntity<Object> registerUser(@Valid CreateUserRequest userRequest);
 
-    ResponseEntity<Object> getTest();
-
-    ResponseEntity<Object> getTest2();
-
 }

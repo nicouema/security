@@ -66,14 +66,4 @@ public class AuthenticationController implements AuthenticationApi {
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> getTest(){
-        return ResponseEntity.ok("Test");
-    }
-
-    @GetMapping("/test-2")
-    public ResponseEntity<Object> getTest2() {
-        return ResponseEntity.ok("Test 2");
-    }
-
 }

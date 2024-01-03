@@ -1,11 +1,9 @@
 package com.claro.nicouema.service.impl;
 
 import com.claro.nicouema.mappers.UserDTOsMapper;
-import com.claro.nicouema.model.Role;
 import com.claro.nicouema.model.User;
-import com.claro.nicouema.persistence.CreateUserSupplier;
-import com.claro.nicouema.persistence.GetUsersOfRoleSupplier;
-import com.claro.nicouema.persistence.LoadUserSupplier;
+import com.claro.nicouema.persistence.RoleMapper;
+import com.claro.nicouema.persistence.UserMapper;
 import com.claro.nicouema.requests.CreateUserRequest;
 import com.claro.nicouema.response.UserResponse;
 import com.claro.nicouema.service.UserService;
@@ -17,18 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDTOsMapper mapper;
+    private final UserDTOsMapper dtoMapper;
+    private final UserMapper userRepository;
+    private final RoleMapper roleRepository;
 
-    private final CreateUserSupplier createUser;
-    private final LoadUserSupplier getUser;
-    private final Function<String, Role> getRoleIfExists;
-    private final GetUsersOfRoleSupplier getUsersOfRole;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -40,38 +35,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUser.apply(username);
+        return userRepository.getUserByUsername(username);
     }
 
     @Override
     public User registerUser(CreateUserRequest createUserRequest) {
-
-        User user = mapper.createUserRequestToUser(createUserRequest);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(getRoleIfExists.apply(defaultRoleUser));
-
-
-        createUser.accept(user);
-        return user;
+        return register(createUserRequest, defaultRoleUser);
     }
 
     @Override
     public User registerAdmin(CreateUserRequest createUserRequest) {
-        User user = mapper.createUserRequestToUser(createUserRequest);
+        return register(createUserRequest, adminRoleUser);
+    }
 
+    private User register(CreateUserRequest createUserRequest, String role) {
+        User user = dtoMapper.createUserRequestToUser(createUserRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(getRoleIfExists.apply(adminRoleUser));
-
-
-        createUser.accept(user);
+        user.setRole(roleRepository.getRoleById(role));
+        userRepository.createNewUser(user);
         return user;
     }
 
     @Override
     public List<UserResponse> getUsersOfRole(String role) {
-        List<User> admins = getUsersOfRole.apply(role);
+        List<User> admins = userRepository.getUsersWithRole(role);
 
-        return mapper.userListToUserResponseList(admins);
+        return dtoMapper.userListToUserResponseList(admins);
     }
 }
