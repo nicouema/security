@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface UserMapper {
+public interface UserRepository {
 
     @Select(value = "SELECT * " +
             "FROM user u, role r " +
