@@ -13,21 +13,21 @@ import java.util.List;
 public interface UserMapper {
 
     @Select(value = "SELECT * " +
-            "FROM users u, role r " +
+            "FROM user u, role r " +
             "WHERE username=#{username} " +
             "AND u.role=r.id")
     @Result(column = "id", property = "role.id")
     @Result(column = "description", property = "role.description")
     User getUserByUsername(String username);
 
-    @Insert(value = "INSERT INTO users " +
+    @Insert(value = "INSERT INTO user " +
             "(username, email, password, role) " +
             "VALUES " +
             "(#{username}, #{email}, #{password}, #{role.id})")
     void createNewUser(User user);
 
     @Select(value = "SELECT * " +
-            "FROM users u " +
+            "FROM user u " +
             "WHERE u.role=#{role}")
     List<User> getUsersWithRole(String role);
 
