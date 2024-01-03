@@ -19,10 +19,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.claro.nicouema.controller.apis.AuthenticationApi.AUTH_URL;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.AUTH;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.LOGIN;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.REGISTER;
+
 
 @RestController
-@RequestMapping(AUTH_URL)
+@RequestMapping(AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationController implements AuthenticationApi {
@@ -30,7 +33,7 @@ public class AuthenticationController implements AuthenticationApi {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN)
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthenticationRequest request) {
 
         log.info(":::::: Logging in user: {} ::::::", request.getUsername());
@@ -42,7 +45,7 @@ public class AuthenticationController implements AuthenticationApi {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping()
+    @PostMapping(REGISTER)
     public ResponseEntity<Object> registerUser(@RequestBody CreateUserRequest userRequest) {
         User createdUser = userService.registerUser(userRequest);
 

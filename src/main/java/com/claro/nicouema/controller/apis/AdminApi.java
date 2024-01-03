@@ -12,7 +12,6 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public interface AdminApi {
 
-    String ADMIN_URL = "/admin";
 
     ResponseEntity<UserAndAuthenticationResponse> registerAdmin(@Valid CreateUserRequest createUserRequest);
 

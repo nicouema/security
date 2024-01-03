@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.claro.nicouema.controller.apis.AdminApi.ADMIN_URL;
+import static com.claro.nicouema.controller.apis.ApiConstants.FullPaths.LOGIN_PATH;
+import static com.claro.nicouema.controller.apis.ApiConstants.FullPaths.REGISTER_USER_PATH;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.ADMIN;;
 
 
 @Configuration
@@ -23,11 +25,7 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtFilter;
 
-    private static final String LOGIN_URL = "/auth/login";
-    private static final String REGISTER_URL = "/auth";
-
     private static final String ADMIN_ROLE = "ADMIN";
-    private static final String USER_ROLE = "USER";
 
 
 
@@ -37,10 +35,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(LOGIN_URL).permitAll()
-                        .requestMatchers(REGISTER_URL).permitAll()
+                        .requestMatchers(LOGIN_PATH).permitAll()
+                        .requestMatchers(REGISTER_USER_PATH).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(ADMIN_URL + "/**").hasAuthority(ADMIN_ROLE)
+                        .requestMatchers(ADMIN + "/**").hasAuthority(ADMIN_ROLE)
                         .anyRequest().fullyAuthenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
