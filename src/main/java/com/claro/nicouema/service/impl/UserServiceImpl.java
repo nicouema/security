@@ -1,5 +1,6 @@
 package com.claro.nicouema.service.impl;
 
+import com.claro.nicouema.exception.ConflictException;
 import com.claro.nicouema.mappers.UserDTOsMapper;
 import com.claro.nicouema.model.User;
 import com.claro.nicouema.persistence.RoleMapper;
@@ -9,6 +10,7 @@ import com.claro.nicouema.response.UserResponse;
 import com.claro.nicouema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +54,13 @@ public class UserServiceImpl implements UserService {
         User user = dtoMapper.createUserRequestToUser(createUserRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleRepository.getRoleById(role));
-        userRepository.createNewUser(user);
+
+        try {
+            userRepository.createNewUser(user);
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("User: " + user.getUsername() + " already exists");
+        }
+
         return user;
     }
 
