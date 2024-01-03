@@ -24,19 +24,19 @@ import java.util.List;
 )
 public class SwaggerConfig {
 
-    @Value("${apiinfo.title}")
+    @Value("${api.info.title}")
     private String title;
 
-    @Value("${apiinfo.nameContact}")
+    @Value("${api.info.nameContact}")
     private String nameContact;
 
-    @Value("${apiinfo.mailContact}")
+    @Value("${api.info.mailContact}")
     private String emailContact;
 
-    @Value("${apiinfo.description}")
+    @Value("${api.info.description}")
     private String description;
 
-    @Value("${apiinfo.version}")
+    @Value("${api.info.version}")
     private String version;
 
     @Bean
