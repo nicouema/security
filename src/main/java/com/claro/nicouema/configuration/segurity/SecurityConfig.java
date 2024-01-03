@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.claro.nicouema.controller.apis.AdminApi.ADMIN_URL;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(LOGIN_URL).permitAll()
                         .requestMatchers(REGISTER_URL).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(ADMIN_ROLE)
+                        .requestMatchers(ADMIN_URL + "/**").hasAuthority(ADMIN_ROLE)
                         .anyRequest().fullyAuthenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
