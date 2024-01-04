@@ -21,9 +21,9 @@ public interface UserRepository {
     User getUserByUsername(String username);
 
     @Insert(value = "INSERT INTO user " +
-            "(username, email, password, role) " +
+            "(username, email, password, role, created_at, is_active) " +
             "VALUES " +
-            "(#{username}, #{email}, #{password}, #{role.id})")
+            "(#{username}, #{email}, #{password}, #{role.id}, CURRENT_TIMESTAMP, 1)")
     void createNewUser(User user);
 
     @Select(value = "SELECT * " +

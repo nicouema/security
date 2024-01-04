@@ -1,7 +1,7 @@
 package com.claro.nicouema.service.impl;
 
 import com.claro.nicouema.exception.ConflictException;
-import com.claro.nicouema.mappers.UserDTOsMapper;
+import com.claro.nicouema.mappers.UserMapper;
 import com.claro.nicouema.model.User;
 import com.claro.nicouema.persistence.RoleRepository;
 import com.claro.nicouema.persistence.UserRepository;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDTOsMapper dtoMapper;
+    private final UserMapper dtoMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 

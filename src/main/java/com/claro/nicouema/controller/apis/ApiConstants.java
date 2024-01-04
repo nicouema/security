@@ -10,6 +10,8 @@ public final class ApiConstants {
         String AUTH = "/auth";
         String LOGIN = "/login";
         String REGISTER = "/register";
+
+        String CLIENTS = "/clients";
     }
 
     public interface FullPaths extends Paths {
