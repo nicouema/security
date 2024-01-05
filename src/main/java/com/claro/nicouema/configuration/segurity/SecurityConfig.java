@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(LOGIN_PATH).permitAll()
                         .requestMatchers(REGISTER_USER_PATH).permitAll()
@@ -41,7 +41,12 @@ public class SecurityConfig {
                         .requestMatchers(ADMIN + "/**").hasAuthority(ADMIN_ROLE)
                         .anyRequest().fullyAuthenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .maximumSessions(1))
+                .logout(logout -> logout
+                        .deleteCookies("JSESSIONID"))
+
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -62,5 +67,4 @@ public class SecurityConfig {
 
         return providerManager;
     }
-
 }
