@@ -10,15 +10,8 @@ import org.springframework.http.ResponseEntity;
 @SecurityRequirement(name = "bearerAuth")
 public interface AuthenticationApi {
 
-    String AUTH_URL = "/auth";
-
-
     ResponseEntity<AuthenticationResponse> loginUser(@Valid AuthenticationRequest request);
 
     ResponseEntity<Object> registerUser(@Valid CreateUserRequest userRequest);
-
-    ResponseEntity<Object> getTest();
-
-    ResponseEntity<Object> getTest2();
 
 }

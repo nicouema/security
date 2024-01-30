@@ -21,10 +21,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static com.claro.nicouema.controller.apis.AdminApi.ADMIN_URL;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.ADMIN;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.REGISTER;
+
 
 @RestController
-@RequestMapping(ADMIN_URL)
+@RequestMapping(ADMIN)
 @RequiredArgsConstructor
 @Slf4j
 public class AdministratorController implements AdminApi {
@@ -33,7 +35,7 @@ public class AdministratorController implements AdminApi {
     private final AuthenticationService authenticationService;
 
     @Override
-    @PostMapping
+    @PostMapping(REGISTER)
     public ResponseEntity<UserAndAuthenticationResponse> registerAdmin(@RequestBody CreateUserRequest createUserRequest) {
         User newAdmin = service.registerAdmin(createUserRequest);
         AuthenticationResponse authenticationResponse = authenticationService

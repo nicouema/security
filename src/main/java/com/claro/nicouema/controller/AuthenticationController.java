@@ -10,6 +10,8 @@ import com.claro.nicouema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +21,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.claro.nicouema.controller.apis.AuthenticationApi.AUTH_URL;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.AUTH;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.LOGIN;
+import static com.claro.nicouema.controller.apis.ApiConstants.Paths.REGISTER;
+
 
 @RestController
-@RequestMapping(AUTH_URL)
+@RequestMapping(AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationController implements AuthenticationApi {
@@ -30,7 +35,7 @@ public class AuthenticationController implements AuthenticationApi {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN)
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody AuthenticationRequest request) {
 
         log.info(":::::: Logging in user: {} ::::::", request.getUsername());
@@ -42,7 +47,7 @@ public class AuthenticationController implements AuthenticationApi {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping()
+    @PostMapping(REGISTER)
     public ResponseEntity<Object> registerUser(@RequestBody CreateUserRequest userRequest) {
         User createdUser = userService.registerUser(userRequest);
 
@@ -63,14 +68,9 @@ public class AuthenticationController implements AuthenticationApi {
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> getTest(){
-        return ResponseEntity.ok("Test");
-    }
-
-    @GetMapping("/test-2")
-    public ResponseEntity<Object> getTest2() {
-        return ResponseEntity.ok("Test 2");
+    @GetMapping("/me")
+    public ResponseEntity<UserDetails> getMe(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(user);
     }
 
 }

@@ -9,12 +9,12 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper
-public interface UserDTOsMapper {
+public interface UserMapper {
 
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "role", ignore = true)
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "lastname", ignore = true)
-    @Mapping(target = "birthdate", ignore = true)
     User createUserRequestToUser(CreateUserRequest user);
 
     UserResponse userToUserResponse(User user);

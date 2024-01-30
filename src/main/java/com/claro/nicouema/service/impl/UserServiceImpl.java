@@ -1,34 +1,33 @@
 package com.claro.nicouema.service.impl;
 
-import com.claro.nicouema.mappers.UserDTOsMapper;
-import com.claro.nicouema.model.Role;
+import com.claro.nicouema.exception.ConflictException;
+import com.claro.nicouema.mappers.UserMapper;
 import com.claro.nicouema.model.User;
-import com.claro.nicouema.persistence.CreateUserSupplier;
-import com.claro.nicouema.persistence.GetUsersOfRoleSupplier;
-import com.claro.nicouema.persistence.LoadUserSupplier;
+import com.claro.nicouema.persistence.RoleRepository;
+import com.claro.nicouema.persistence.UserRepository;
 import com.claro.nicouema.requests.CreateUserRequest;
 import com.claro.nicouema.response.UserResponse;
 import com.claro.nicouema.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserDTOsMapper mapper;
+    private final UserMapper dtoMapper;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    private final CreateUserSupplier createUser;
-    private final LoadUserSupplier getUser;
-    private final Function<String, Role> getRoleIfExists;
-    private final GetUsersOfRoleSupplier getUsersOfRole;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -40,38 +39,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUser.apply(username);
+        return userRepository.getUserByUsername(username);
     }
 
     @Override
     public User registerUser(CreateUserRequest createUserRequest) {
-
-        User user = mapper.createUserRequestToUser(createUserRequest);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(getRoleIfExists.apply(defaultRoleUser));
-
-
-        createUser.accept(user);
-        return user;
+        return register(createUserRequest, defaultRoleUser);
     }
 
     @Override
     public User registerAdmin(CreateUserRequest createUserRequest) {
-        User user = mapper.createUserRequestToUser(createUserRequest);
+        return register(createUserRequest, adminRoleUser);
+    }
 
+    private User register(CreateUserRequest createUserRequest, String role) {
+        User user = dtoMapper.createUserRequestToUser(createUserRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(getRoleIfExists.apply(adminRoleUser));
+        user.setRole(roleRepository.getRoleById(role));
 
+        try {
+            userRepository.createNewUser(user);
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("User: " + user.getUsername() + " already exists");
+        }
 
-        createUser.accept(user);
         return user;
     }
 
     @Override
     public List<UserResponse> getUsersOfRole(String role) {
-        List<User> admins = getUsersOfRole.apply(role);
+        List<User> admins = userRepository.getUsersWithRole(role);
 
-        return mapper.userListToUserResponseList(admins);
+        return dtoMapper.userListToUserResponseList(admins);
     }
 }

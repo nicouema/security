@@ -1,6 +1,6 @@
 package com.claro.nicouema.service.impl;
 
-import com.claro.nicouema.mappers.UserDTOsMapper;
+import com.claro.nicouema.mappers.UserMapper;
 import com.claro.nicouema.model.User;
 import com.claro.nicouema.response.AuthenticationResponse;
 import com.claro.nicouema.response.UserAndAuthenticationResponse;
@@ -21,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final UserDTOsMapper mapper;
+    private final UserMapper mapper;
 
     public AuthenticationResponse prepareAuthenticationResponse(String username, String password) {
 
