@@ -10,7 +10,6 @@ import org.mapstruct.Named;
 @Mapper
 public interface ClientMapper {
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     Client createClientRequestToClient(CreateClientRequest request);
 

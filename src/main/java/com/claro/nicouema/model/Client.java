@@ -14,7 +14,8 @@ import java.time.Period;
 @Setter
 public class Client {
 
-    private Long id;
+    private String idType;
+    private String idNum;
     private String name;
     private String lastname;
     private LocalDate birthdate;

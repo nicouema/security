@@ -46,7 +46,6 @@ public class User implements UserDetails {
         return Collections.emptySet();
     }
 
-//    TODO
     @Override
     public boolean isAccountNonExpired() {
         return true;

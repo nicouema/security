@@ -9,10 +9,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface ClientRepository {
 
-    @Insert(value = "INSERT INTO client (name, lastname, birthdate, username) " +
-            "VALUES (#{name}, #{lastname}, #{birthdate}, #{username})")
-//    @Result(column = "client_id", property = "id")
-//    @Result(column = "username", property = "user.username")
+    @Insert(value = "INSERT INTO client (id_type, client_id, name, lastname, birthdate, username) " +
+            "VALUES (#{idType}, #{idNum}, #{name}, #{lastname}, #{birthdate}, #{username})")
+    @Result(column = "id_type", property = "idType")
+    @Result(column = "client_id", property = "idNum")
     long saveClient(Client client);
 
     @Select(value = "SELECT * FROM client c, user u " +

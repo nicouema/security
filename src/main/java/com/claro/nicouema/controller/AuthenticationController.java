@@ -10,6 +10,8 @@ import com.claro.nicouema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +66,11 @@ public class AuthenticationController implements AuthenticationApi {
                 .toUri();
 
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDetails> getMe(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(user);
     }
 
 }

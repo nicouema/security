@@ -1,7 +1,7 @@
 -- securitydb.user definition
 
 CREATE TABLE `client` (
-                        `client_id`     bigint          not null,
+                        `client_id`     varchar(64)      not null,
                         `name`          varchar(255)    NOT NULL,
                         `lastname`      varchar(255)    NOT NULL,
                         `birthdate`     datetime(6)     NOT NULL,

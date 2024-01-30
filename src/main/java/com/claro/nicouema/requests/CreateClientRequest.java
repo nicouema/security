@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Setter
 public class CreateClientRequest {
 
+    private String idType;
+    private String idNum;
     private String name;
     private String lastname;
     private LocalDate birthdate;
